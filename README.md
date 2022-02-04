@@ -1,36 +1,20 @@
 # ARMOR: Differential Model Distribution for Robust Federated Learning Against Adversarial Attacks
 
-In this work, we formalize the concept of differential model robustness,
-a new property for ensuring model security in federated learning (FL) systems. 
-We point out that for most conventional FL frameworks, 
-all clients receive the same global model at the end of each communication round.
-Our observation here is that, if there exists a malicious client who
-is able to generate powerful adversarial samples against one model,
-the attack will be immediately transferable to all of the other benign clients.
-
-To the best of our knowledge, we are the first to
-define the notion of differential model robustness against white-box adversarial 
-attacks to address the attack transferability concern in FL systems.
-In addition, we propose a differential model distribution 
-technique that perturbs and enhances the global model in a differential way and
-sends each (potentially malicious) client different local models
-that is derived from the global. In this way, we
-are able to prevent adversarial samples generated on one model
-from transferring to other models while retaining model utility. 
-To better measure the attack and defense performance, we also propose new notions
-such as average adversarial transfer rate (AATR) and differential model robustness.
-Through extensive experiments on the MNIST
-and CIFAR-10 datasets, we demonstrate that the ARMOR can significantly reduce both 
-the ASR and AATR across different FL settings.
-For example, the ASR and AATR are reduced by nearly 5/6 (100\% to 16.53\%) 
-and 3/4 (100\% to 23.04\%) over the MNIST dataset, respectively, 
-and by nearly 5/6 (100\% to 17.20\%) and 2/3 (100\% to 29.23\%) over the CIFAR-10 dataset, 
-respectively, in a 50-client FL system.
+We formalize the notion of differential model robustness (DMR) under the federated learning (FL) context.
+We explore how can DMR be realized in concrete FL protocols based on deep neural networks (NNs).
+We develop the differential model distribution (DMD) technique,
+which distribute different NN models by noise-aided adversarial training.
+This is a proof-of-concept implementation of our differential model distribution (DMD) technique.
 
 
 ## Experimental Tracking Platform
 To report real-time result to wandb.com, please change wandb ID to your own. \
 wandb login {YOUR_WANDB_API_KEY}
+
+## Requirements
+* Python 3.6
+* Torch 1.10.1
+* Numpy 1.19.5
 
 ## Experiment results
 
@@ -88,3 +72,10 @@ sh run_process_attack_list_ATR.sh mnist 0.14 no_noise_adv 50
 ## noise_only
 sh run_process_attack_list_ATR.sh mnist 0.14 noise_only 50
 ``` 
+
+## Reference
+[1] McMahan, Brendan, et al. "Communication-efficient learning of deep networks from decentralized data." Artificial intelligence and statistics. PMLR, 2017.
+
+[2] Papernot, Nicolas, et al. "Technical report on the cleverhans v2. 1.0 adversarial examples library." arXiv preprint arXiv:1610.00768 (2016).
+
+[3] Wei, Kang, et al. "Federated learning with differential privacy: Algorithms and performance analysis." IEEE Transactions on Information Forensics and Security 15 (2020): 3454-3469.

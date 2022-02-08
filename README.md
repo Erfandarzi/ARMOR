@@ -72,6 +72,9 @@ sh run_process_attack_list_ATR.sh mnist 0.14 no_noise_adv 50
 sh run_process_attack_list_ATR.sh mnist 0.14 noise_only 50
 ``` 
 
+*  To analyze ATR, AATR and ASR of above techniques under different settings,
+modify and run ```process_ATR.py``` and ```process_ASR.py``` to your need sequentially.
+
 ## Reference
 [1] McMahan, Brendan, et al. "Communication-efficient learning of deep networks from decentralized data." Artificial intelligence and statistics. PMLR, 2017.
 

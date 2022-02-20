@@ -138,18 +138,14 @@ def per_attack_no_noise():
                         (report.nb_correct / report.nb_test * 100.0),
                         ((1 - report.correct_pgd_in_corrected / report.nb_correct) * 100.0))
 
-                with open(pgd_file, "w", encoding="utf-8") as f:
-                    f.write(pgd_data)
-
-                with open(attack_list, "w", encoding="utf-8") as f:
-                    f.write(list_data)
-
             pgd_data += "##############################################################################\n"
             list_data += "##############################################################################\n"
-
-            with open(pgd_file, "w", encoding="utf-8") as f:
-                f.write(pgd_data)
             test_round += 1
+
+    with open(pgd_file, "w", encoding="utf-8") as f:
+        f.write(pgd_data)
+    with open(attack_list, "w", encoding="utf-8") as f:
+        f.write(list_data)
 
 
 if __name__ == '__main__':

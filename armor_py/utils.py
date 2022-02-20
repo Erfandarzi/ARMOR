@@ -1,9 +1,20 @@
 import copy
+import os
 import random
 import re
+import shutil
+
 import torch
 import numpy as np
 
+def test_mkdir(path):
+    if not os.path.exists((path)):
+        os.mkdir(path)
+
+def test_cpdir(source, target):
+    if os.path.exists(target):
+        shutil.rmtree(target)
+    shutil.copytree(source, target)
 
 def alter(file, old_str, new_str):
     file_data = ""

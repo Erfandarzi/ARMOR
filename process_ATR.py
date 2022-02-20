@@ -1,10 +1,9 @@
 import os
-import shutil
 import matplotlib.pyplot as plt
 import numpy as np
 
 from armor_py.options import args_parser
-from armor_py.utils import alter_re, alter, del_blank_line
+from armor_py.utils import alter_re, alter, del_blank_line, test_cpdir, test_mkdir
 
 
 def atr_per_process():
@@ -16,10 +15,7 @@ def atr_per_process():
     path_list_processed = path + prefix + "_processed/"
     AATR_list = []
 
-    # process raw begin
-    if os.path.exists(path_list_processed):
-        shutil.rmtree(path_list_processed)
-    shutil.copytree(path_list, path_list_processed)
+    test_cpdir(path_list, path_list_processed)
 
     files_list = []
     for file_list in os.listdir(path_list_processed):
@@ -33,13 +29,7 @@ def atr_per_process():
         alter(file, "##############################################################################", "")
         alter(file, "Adversary Examples Generated on Client ", "")
         del_blank_line(file)
-    # process raw end
 
-    result_path = dataset_path + "ATR_pic/out/"
-    if not os.path.exists(result_path):
-        os.makedirs(result_path)
-    result_file = result_path + args.dataset + "_client_num_{}".format(client_num_in_total) + "_" + model_name + ".out"
-    file_data = "Noise\tAATR\n"
     num_items = 1000
     full_path = path_list_processed + prefix + "_{:.3f}.out".format(args.global_noise_scale)
     file_attack_list = open(full_path)
@@ -85,7 +75,6 @@ def atr_per_process():
 
     AATR = np.average(ATR)
     AATR_list.append(AATR)
-    file_data += "{:.3f}\t{:.2f}%\n".format(args.global_noise_scale, AATR*100)
 
     TR_array = []
     for TR_idx in range(len(TR)):
@@ -133,15 +122,32 @@ def atr_per_process():
         os.makedirs(fig_path)
     plt.savefig(fig_path + model_name + "_ATR_noise={:.3f}.pdf".format(args.global_noise_scale))
     plt.close()
-
-    with open(result_file, "w", encoding="utf-8") as f:
-        f.write(file_data)
+    return AATR
 
 
 if __name__ == '__main__':
     args = args_parser()
     prefix = "attack_list"
+    args.dataset = "cifar"
+    # args.dataset = "mnist"
+
+    if args.dataset == "cifar":
+        noise_scale = np.linspace(0, 0.12, 25)
+    elif args.dataset == "mnist":
+        noise_scale = np.linspace(0, 0.32, 33)
+    model_list = ['no_noise_adv', 'noise_adv', 'noise_only']
+
     dataset_path = "by_client/" + args.dataset + "/"
-    print("dataset = " + args.dataset + ", num of client = {} , noise = {:.3f} begins...".format(args.client_num_in_total, args.global_noise_scale))
-    atr_per_process()
-    print("dataset = " + args.dataset + ", num of client = {} , noise = {:.3f} completed!".format(args.client_num_in_total, args.global_noise_scale))
+    result_path = dataset_path + "ATR_pic/out/"
+    test_mkdir(result_path)
+
+    for args.client_num_in_total in [5, 25, 50, 75, 100]:
+        for args.model_name in model_list:
+            result_file = result_path + args.dataset + "_client_num_{}".format(args.client_num_in_total) + "_" + args.model_name + ".out"
+            file_data = "Noise\tAATR\n"
+            for args.global_noise_scale in noise_scale:
+                AATR = atr_per_process()
+                file_data += "{:.3f}\t{:.2f}%\n".format(args.global_noise_scale, AATR * 100)
+                print("dataset = " + args.dataset + ", " + args.model_name + ", num of client = {} , noise = {:.3f} completed!".format(args.client_num_in_total, args.global_noise_scale))
+            with open(result_file, "w", encoding="utf-8") as f:
+                f.write(file_data)

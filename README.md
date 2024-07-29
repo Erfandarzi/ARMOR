@@ -1,4 +1,4 @@
-# ARMOR: Differential Model Distribution for Robust Federated Learning Against Adversarial Attacks
+# ARMOR:Robust Federated Learning and Adversarial Attacks
 
 We formalize the notion of differential model robustness (DMR) under the federated learning (FL) context, and explore how can DMR be realized in concrete FL protocols based on deep neural networks (NNs).
 We develop the differential model distribution (DMD) technique,
